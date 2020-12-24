@@ -31,21 +31,24 @@ extern "C" {   /* To prevent C++ compilers from mangling symbols */
 double cg_value
 (
     double *x,
-    INT     n
+    INT     n,
+    void   *User
 ) ;
 
 void cg_grad
 (
     double  *g,
     double  *x,
-    INT      n
+    INT      n,
+    void    *User
 ) ;
 
 double cg_valgrad
 (
     double  *g,
     double  *x,
-    INT      n
+    INT      n,
+    void    *User
 ) ;
 
 /* global variables */
@@ -151,7 +154,7 @@ double cg_valgrad
         sec = tv.tv_sec ;
         usec = tv.tv_usec ; */
         status = cg_descent (x, CUTEr_nvar, &Stats, &cg_parm, 1.e-6,
-                             cg_value, cg_grad, cg_valgrad, NULL) ;
+                             cg_value, cg_grad, cg_valgrad, NULL, NULL) ;
 /*      gettimeofday (&tv, NULL) ;
         walltime = tv.tv_sec - sec + (double) (tv.tv_usec - usec) /1.e6 ;*/
 
@@ -206,7 +209,8 @@ double cg_valgrad
 double cg_value
 (
     double *x,
-    INT     n
+    INT     n,
+    void   *User
 )
 {
     long int N ;
@@ -220,7 +224,8 @@ void cg_grad
 (
     double  *g,
     double  *x,
-    INT      n
+    INT      n,
+    void    *User
 )
 {
     long int N ;
@@ -232,7 +237,8 @@ double cg_valgrad
 (
     double  *g,
     double  *x,
-    INT      n
+    INT      n,
+    void    *User
 )
 {
     long int grad ;

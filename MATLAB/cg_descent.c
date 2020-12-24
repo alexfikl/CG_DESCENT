@@ -18,9 +18,9 @@ mxArray *cg_myvalgrad ;
 /* end global variables */
 
 mxArray *EvaluateFunction (mxArray *f, mxArray *x);
-double user_value (double *x, INT n);
-void user_grad(double *g, double *x, INT n);
-double user_valgrad(double *g, double *x, INT n);
+double user_value (double *x, INT n, void *User);
+void user_grad(double *g, double *x, INT n, void *User);
+double user_valgrad(double *g, double *x, INT n, void *User);
 void ReadParm (cg_parameter *Parm, const mxArray *prh);
 void GetStat (mxArray **out, cg_stats   *Stat);
 
@@ -33,7 +33,7 @@ mxArray *EvaluateFunction (mxArray *f, mxArray *x)
     return y ;
 }
 
-double user_value (double *x, INT n)
+double user_value (double *x, INT n, void *User)
 {
     mxArray *F, *X ;
     X = mxCreateDoubleMatrix (0,0,mxREAL) ;
@@ -49,7 +49,7 @@ double user_value (double *x, INT n)
     return mxGetScalar (F) ;
 }
 
-void user_grad(double *g, double *x, INT n)
+void user_grad(double *g, double *x, INT n, void *User)
 {
     mxArray *G, *X ;
     X = mxCreateDoubleMatrix (0,0,mxREAL) ;
@@ -66,7 +66,7 @@ void user_grad(double *g, double *x, INT n)
     return ;
 }
 
-double user_valgrad(double *g, double *x, INT n)
+double user_valgrad(double *g, double *x, INT n, void *User)
 {
     mxArray *fg [2], *ppFevalRhs [2], *X ;
     double F ;
@@ -219,7 +219,7 @@ void mexFunction( int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[] )
 
     x = mxGetPr (prhs[0]) ;
     n = MAX (mxGetN (prhs[0]), mxGetM (prhs[0])) ;
-    tol = mxGetScalar (prhs[1]) ;  
+    tol = mxGetScalar (prhs[1]) ;
     cg_myvalue = (mxArray*) prhs [2] ;  /* handle for function evaluation */
     cg_mygrad = (mxArray*) prhs [3] ;   /* handle for gradient evaluation */
 
@@ -293,12 +293,12 @@ void mexFunction( int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[] )
     if ( FoundValgrad )
     {
         *status = cg_descent (newx, n, Stat, Parm, tol,
-                  user_value, user_grad, user_valgrad, Work) ;
+                  user_value, user_grad, user_valgrad, Work, NULL) ;
     }
     else
     {
         *status = cg_descent (newx, n, Stat, Parm, tol,
-                  user_value, user_grad, NULL, Work) ;
+                  user_value, user_grad, NULL, Work, NULL) ;
     }
     mxFree (Work) ;
 
