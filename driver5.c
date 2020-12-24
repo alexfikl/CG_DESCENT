@@ -64,21 +64,24 @@
 double myvalue
 (
     double   *x,
-    INT       n
+    INT       n,
+    void     *User
 ) ;
 
 void mygrad
 (
     double    *g,
     double    *x,
-    INT        n
+    INT        n,
+    void      *User
 ) ;
 
 double myvalgrad
 (
     double    *g,
     double    *x,
-    INT        n
+    INT        n,
+    void      *User
 ) ;
 
 int main (void)
@@ -102,13 +105,13 @@ int main (void)
     Parm.PrintLevel = 1 ;
 
     /* solve the problem with error tolerance 1.e-8 */
-    cg_descent(x, n, NULL, &Parm, 1.e-8, myvalue, mygrad, myvalgrad, NULL) ;
+    cg_descent(x, n, NULL, &Parm, 1.e-8, myvalue, mygrad, myvalgrad, NULL, NULL) ;
 
     /* starting guess */
     for (i = 0; i < n; i++) x [i] = 1. ;
 
     /* solve the problem with error tolerance 1.e-6 */
-    cg_descent(x, n, NULL, &Parm, 1.e-6, myvalue, mygrad, myvalgrad, NULL) ;
+    cg_descent(x, n, NULL, &Parm, 1.e-6, myvalue, mygrad, myvalgrad, NULL, NULL) ;
 
     /* starting guess */
     for (i = 0; i < n; i++) x [i] = 1. ;
@@ -117,7 +120,7 @@ int main (void)
     cg_default (&Parm) ;
 
     /* solve the problem with error tolerance 1.e-8 */
-    cg_descent(x, n, NULL, &Parm, 1.e-8, myvalue, mygrad, myvalgrad, NULL) ;
+    cg_descent(x, n, NULL, &Parm, 1.e-8, myvalue, mygrad, myvalgrad, NULL, NULL) ;
 
     free (x) ; /* free work space */
 }
@@ -125,7 +128,8 @@ int main (void)
 double myvalue
 (
     double   *x,
-    INT       n
+    INT       n,
+    void     *User
 )
 {
     double f, t ;
@@ -144,7 +148,8 @@ void mygrad
 (
     double    *g,
     double    *x,
-    INT        n
+    INT        n,
+    void      *User
 )
 {
     double t ;
@@ -162,7 +167,8 @@ double myvalgrad
 (
     double    *g,
     double    *x,
-    INT        n
+    INT        n,
+    void      *User
 )
 {
     double ex, f, t ;

@@ -5,7 +5,7 @@
    stepsize (initial step is 1.e-5), QuadStep is FALSE, and rho is 1.5.
    The code has to do a number of expansions to reach a suitable
    interval bracketing the minimizer in the initial search direction.
- 
+
    Termination status: 0
    Convergence tolerance for gradient satisfied
    maximum norm for gradient:  6.283573e-09
@@ -33,21 +33,24 @@
 double myvalue
 (
     double   *x,
-    INT       n
+    INT       n,
+    void     *User
 ) ;
 
 void mygrad
 (
     double    *g,
     double    *x,
-    INT        n
+    INT        n,
+    void      *User
 ) ;
 
 double myvalgrad
 (
     double    *g,
     double    *x,
-    INT        n
+    INT        n,
+    void      *User
 ) ;
 
 int main (void)
@@ -73,7 +76,7 @@ int main (void)
     Parm.rho = 1.5 ;
 
     /* solve the problem */
-    cg_descent(x, n, NULL, &Parm, 1.e-8, myvalue, mygrad, myvalgrad, NULL) ;
+    cg_descent(x, n, NULL, &Parm, 1.e-8, myvalue, mygrad, myvalgrad, NULL, NULL) ;
 
     /* starting guess */
     for (i = 0; i < n; i++) x [i] = 1. ;
@@ -82,7 +85,7 @@ int main (void)
     Parm.rho = 5. ;
 
     /* solve the problem */
-    cg_descent(x, n, NULL, &Parm, 1.e-8, myvalue, mygrad, myvalgrad, NULL) ;
+    cg_descent(x, n, NULL, &Parm, 1.e-8, myvalue, mygrad, myvalgrad, NULL, NULL) ;
 
 /* free work space */
     free (x) ;
@@ -91,7 +94,8 @@ int main (void)
 double myvalue
 (
     double   *x,
-    INT       n
+    INT       n,
+    void     *User
 )
 {
     double f, t ;
@@ -110,7 +114,8 @@ void mygrad
 (
     double    *g,
     double    *x,
-    INT        n
+    INT        n,
+    void      *User
 )
 {
     double t ;
@@ -128,7 +133,8 @@ double myvalgrad
 (
     double    *g,
     double    *x,
-    INT        n
+    INT        n,
+    void      *User
 )
 {
     double ex, f, t ;

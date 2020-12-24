@@ -40,21 +40,24 @@
 double myvalue
 (
     double   *x,
-    INT       n
+    INT       n,
+    void     *User
 ) ;
 
 void mygrad
 (
     double    *g,
     double    *x,
-    INT        n
+    INT        n,
+    void      *User
 ) ;
 
 double myvalgrad
 (
     double    *g,
     double    *x,
-    INT        n
+    INT        n,
+    void      *User
 ) ;
 
 int main (void)
@@ -74,14 +77,14 @@ int main (void)
     Parm.QuadStep = FALSE ; /* change QuadStep to FALSE */
 
     /* run the code */
-    cg_descent(x, n, NULL, &Parm, 1.e-8, myvalue, mygrad, myvalgrad, NULL) ;
+    cg_descent(x, n, NULL, &Parm, 1.e-8, myvalue, mygrad, myvalgrad, NULL, NULL) ;
 
     /* set starting guess */
     for (i = 0; i < n; i++) x [i] = 1. ;
     Parm.QuadStep = TRUE ; /* change QuadStep to TRUE */
 
     /* run the code */
-    cg_descent(x, n, NULL, &Parm, 1.e-8, myvalue, mygrad, myvalgrad, NULL) ;
+    cg_descent(x, n, NULL, &Parm, 1.e-8, myvalue, mygrad, myvalgrad, NULL, NULL) ;
 
     free (x) ; /* free workspace */
 }
@@ -89,7 +92,8 @@ int main (void)
 double myvalue
 (
     double   *x,
-    INT       n
+    INT       n,
+    void     *User
 )
 {
     double f, t ;
@@ -108,7 +112,8 @@ void mygrad
 (
     double    *g,
     double    *x,
-    INT        n
+    INT        n,
+    void      *User
 )
 {
     double t ;
@@ -126,7 +131,8 @@ double myvalgrad
 (
     double    *g,
     double    *x,
-    INT        n
+    INT        n,
+    void      *User
 )
 {
     double ex, f, t ;

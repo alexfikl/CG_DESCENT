@@ -26,20 +26,23 @@
 double myvalue
 (
     double   *x,
-    INT       n
+    INT       n,
+    void     *User
 ) ;
 
 void mygrad
 (
     double    *g,
     double    *x,
-    INT        n
+    INT        n,
+    void      *User
 ) ;
 double myvalgrad
 (
     double    *g,
     double    *x,
-    INT        n
+    INT        n,
+    void      *User
 ) ;
 
 int main (void)
@@ -63,7 +66,7 @@ int main (void)
     Parm.step = 1. ;
 
     /* solve the problem */
-    cg_descent(x, n, &Stats, &Parm, 1.e-8, myvalue, mygrad, myvalgrad, NULL) ;
+    cg_descent(x, n, &Stats, &Parm, 1.e-8, myvalue, mygrad, myvalgrad, NULL, NULL) ;
 
     free (x) ; /* free work space */
 }
@@ -71,7 +74,8 @@ int main (void)
 double myvalue
 (
     double   *x ,
-    INT       n
+    INT       n ,
+    void     *User
 )
 {
     double f, t ;
@@ -90,7 +94,8 @@ void mygrad
 (
     double    *g ,
     double    *x ,
-    INT        n
+    INT        n ,
+    void      *User
 )
 {
     double t ;
@@ -108,7 +113,8 @@ double myvalgrad
 (
     double    *g,
     double    *x,
-    INT        n
+    INT        n,
+    void      *User
 )
 {
     double ex, f, t ;
