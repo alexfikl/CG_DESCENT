@@ -1,3 +1,6 @@
+#ifndef _CG_DESCENT_HEADER_H
+#define _CG_DESCENT_HEADER_H
+
 #include <math.h>
 #include <limits.h>
 #include <float.h>
@@ -262,3 +265,5 @@ PRIVATE void cg_printParms
 (
     cg_parameter  *Parm
 ) ;
+
+#endif

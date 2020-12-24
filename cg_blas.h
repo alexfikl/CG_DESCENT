@@ -1,3 +1,6 @@
+#ifndef _CG_BLAS_HEADER_H
+#define _CG_BLAS_HEADER_H
+
 /* If the BLAS are not installed, then the following definitions
    can be ignored. If the BLAS are available, then to use them,
    comment out the the next statement (#define NOBLAS) and make
@@ -79,3 +82,5 @@ void CG_DCOPY (BLAS_INT *n, double *DX, BLAS_INT *incx, double *DY,
         BLAS_INT *incy) ;
 
 BLAS_INT CG_IDAMAX (BLAS_INT *n, double *DX, BLAS_INT *incx) ;
+
+#endif

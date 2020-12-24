@@ -1,3 +1,6 @@
+#ifndef _CG_USER_HEADER_H
+#define _CG_USER_HEADER_H
+
 #include <limits.h>
 #include <float.h>
 #include <string.h>
@@ -239,4 +242,6 @@ void cg_default /* set default parameter values */
 
 #ifdef __cplusplus
 }
+#endif
+
 #endif
