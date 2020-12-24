@@ -29,6 +29,14 @@ extern "C"
 #endif
 
 /*============================================================================
+ * function pointer types
+ */
+
+typedef double (*cg_value_fn)(double*, INT);
+typedef void (*cg_grad_fn)(double*, double*, INT);
+typedef double (*cg_valgrad_fn)(double*, double*, INT);
+
+/*============================================================================
    cg_parameter is a structure containing parameters used in cg_descent
    cg_default assigns default values to these parameters */
 typedef struct cg_parameter_struct /* user controlled parameters */
@@ -229,9 +237,9 @@ int cg_descent /*  return:
     double      grad_tol, /* StopRule = 1: |g|_infty <= max (grad_tol,
                                            StopFac*initial |g|_infty) [default]
                              StopRule = 0: |g|_infty <= grad_tol(1+|f|) */
-    double        (*value) (double *, INT),  /* f = value (x, n) */
-    void           (*grad) (double *, double *, INT), /* grad (g, x, n) */
-    double      (*valgrad) (double *, double *, INT), /* f = valgrad (g,x,n)*/
+    cg_value_fn value,      /* f = value (x, n) */
+    cg_grad_fn grad,        /* grad (g, x, n) */
+    cg_valgrad_fn valgrad,  /* f = valgrad (g,x,n)*/
     double         *Work  /* either size 4n work array or NULL */
 ) ;
 

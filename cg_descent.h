@@ -1,13 +1,10 @@
 #ifndef _CG_DESCENT_HEADER_H
 #define _CG_DESCENT_HEADER_H
 
+#include "cg_user.h"
+
 #include <math.h>
-#include <limits.h>
-#include <float.h>
-#include <string.h>
 #include <ctype.h>
-#include <stdlib.h>
-#include <stdio.h>
 
 #define PRIVATE static
 #define ZERO ((double) 0)
@@ -53,9 +50,9 @@ typedef struct cg_com_struct /* common variables */
     double          *d ; /* current search direction */
     double          *g ; /* gradient at x */
     double      *gtemp ; /* gradient at x + alpha*d */
-    double   (*cg_value) (double *, INT) ; /* f = cg_value (x, n) */
-    void      (*cg_grad) (double *, double *, INT) ; /* cg_grad (g, x, n) */
-    double (*cg_valgrad) (double *, double *, INT) ; /* f = cg_valgrad (g,x,n)*/
+    cg_value_fn     cg_value ; /* f = cg_value (x, n) */
+    cg_grad_fn       cg_grad ; /* cg_grad (g, x, n) */
+    cg_valgrad_fn cg_valgrad ; /* f = cg_valgrad (g,x,n)*/
     cg_parameter *Parm ; /* user parameters */
 } cg_com ;
 
