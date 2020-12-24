@@ -20,6 +20,11 @@
 #define NULL 0
 #endif
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
 /*============================================================================
    cg_parameter is a structure containing parameters used in cg_descent
    cg_default assigns default values to these parameters */
@@ -231,3 +236,7 @@ void cg_default /* set default parameter values */
 (
     cg_parameter   *Parm
 ) ;
+
+#ifdef __cplusplus
+}
+#endif
