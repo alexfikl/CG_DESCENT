@@ -4,7 +4,7 @@
 /* If the BLAS are not installed, then the following definitions
    can be ignored. If the BLAS are available, then to use them,
    comment out the the next statement (#define NOBLAS) and make
-   any needed adjustments to BLAS_UNDERSCORE and the START parameters.
+   any needed adjustments to CG_BLAS_UNDERSCORE and the START parameters.
    cg_descent already does loop unrolling, so there is likely no
    benefit from using unrolled BLAS. There could be a benefit from
    using threaded BLAS if the problems is really big. However,
@@ -13,14 +13,18 @@
    START parameters should be specified to determine when to start
    using the BLAS. */
 
+#ifdef CG_DISABLE_BLAS
 #define NOBLAS
+#endif
 
 /* if BLAS are used, specify the integer precision */
 #define BLAS_INT long int
 
 /* if BLAS are used, comment out the next statement if no
  *    underscore in the subroutine names are needed */
-#define BLAS_UNDERSCORE
+#ifndef CG_BLAS_UNDERSCORE
+#define CG_BLAS_UNDERSCORE
+#endif
 
 /* only use ddot when the vector size >= DDOT_START */
 #define DDOT_START 100
@@ -41,7 +45,7 @@
    elements in matrix >= MATVEC_START */
 #define MATVEC_START 8000
 
-#ifdef BLAS_UNDERSCORE
+#ifdef CG_BLAS_UNDERSCORE
 
 #define CG_DGEMV dgemv_
 #define CG_DTRSV dtrsv_
