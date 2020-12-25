@@ -77,14 +77,14 @@ int main (void)
     Parm.QuadStep = FALSE ; /* change QuadStep to FALSE */
 
     /* run the code */
-    cg_descent(x, n, NULL, &Parm, 1.e-8, myvalue, mygrad, myvalgrad, NULL, NULL) ;
+    cg_descent(x, n, NULL, &Parm, 1.e-8, myvalue, mygrad, myvalgrad, NULL, NULL, NULL) ;
 
     /* set starting guess */
     for (i = 0; i < n; i++) x [i] = 1. ;
     Parm.QuadStep = TRUE ; /* change QuadStep to TRUE */
 
     /* run the code */
-    cg_descent(x, n, NULL, &Parm, 1.e-8, myvalue, mygrad, myvalgrad, NULL, NULL) ;
+    cg_descent(x, n, NULL, &Parm, 1.e-8, myvalue, mygrad, myvalgrad, NULL, NULL, NULL) ;
 
     free (x) ; /* free workspace */
 }

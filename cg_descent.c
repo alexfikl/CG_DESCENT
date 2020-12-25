@@ -1476,6 +1476,7 @@ int cg_descent /*  return status of solution process:
             if ( gnorm2 < gbest ) gbest = gnorm2 ;
         }
         else nslow++ ;
+
         if ( nslow > slowlimit )
         {
             status = 9 ;

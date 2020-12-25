@@ -76,7 +76,7 @@ int main (void)
     Parm.rho = 1.5 ;
 
     /* solve the problem */
-    cg_descent(x, n, NULL, &Parm, 1.e-8, myvalue, mygrad, myvalgrad, NULL, NULL) ;
+    cg_descent(x, n, NULL, &Parm, 1.e-8, myvalue, mygrad, myvalgrad, NULL, NULL, NULL) ;
 
     /* starting guess */
     for (i = 0; i < n; i++) x [i] = 1. ;
@@ -85,7 +85,7 @@ int main (void)
     Parm.rho = 5. ;
 
     /* solve the problem */
-    cg_descent(x, n, NULL, &Parm, 1.e-8, myvalue, mygrad, myvalgrad, NULL, NULL) ;
+    cg_descent(x, n, NULL, &Parm, 1.e-8, myvalue, mygrad, myvalgrad, NULL, NULL, NULL) ;
 
 /* free work space */
     free (x) ;

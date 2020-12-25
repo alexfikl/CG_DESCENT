@@ -66,7 +66,7 @@ int main (void)
     Parm.step = 1. ;
 
     /* solve the problem */
-    cg_descent(x, n, &Stats, &Parm, 1.e-8, myvalue, mygrad, myvalgrad, NULL, NULL) ;
+    cg_descent(x, n, &Stats, &Parm, 1.e-8, myvalue, mygrad, myvalgrad, NULL, NULL, NULL) ;
 
     free (x) ; /* free work space */
 }
