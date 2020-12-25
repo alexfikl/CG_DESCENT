@@ -78,6 +78,16 @@ double one [1], zero [1] ;
 BLAS_INT blas_one [1] ;
 /* end external variables */
 
+#define UPDATE_STATS_AND_CALLBACK()     \
+    IterStats.iter = iter;              \
+    IterStats.alpha = alpha;            \
+    IterStats.x = x;                    \
+    IterStats.f = f;                    \
+    IterStats.g = g;                    \
+    IterStats.d = d;                    \
+    if (callback(&IterStats, User) == 0) { status = 13; goto Exit; }
+
+
 int cg_descent /*  return status of solution process:
                        0 (convergence tolerance satisfied)
                        1 (change in func <= feps*|f|)
@@ -92,7 +102,8 @@ int cg_descent /*  return status of solution process:
                           2n + Parm->nslow iterations)
                       10 (out of memory)
                       11 (function nan or +-INF and could not be repaired)
-                      12 (invalid choice for memory parameter) */
+                      12 (invalid choice for memory parameter)
+                      13 (iteration stopped by user callback) */
 (
     double            *x, /* input: starting guess, output: the solution */
     INT                n, /* problem dimension */
@@ -104,7 +115,9 @@ int cg_descent /*  return status of solution process:
     cg_value_fn     value, /* f = value (x, n, User) */
     cg_grad_fn       grad, /* grad (g, x, n, User) */
     cg_valgrad_fn valgrad, /* f = valgrad (g, x, n, User),
-                          NULL = compute value & gradient using value & grad */
+                              NULL = compute value & gradient using value & grad */
+    cg_callback_fn callback,/* user provided function called at the end of a
+                               (successful) iteration */
     double         *Work, /* NULL => let code allocate memory
                              not NULL => use array Work for required memory
                              The amount of memory needed depends on the value
@@ -134,6 +147,9 @@ int cg_descent /*  return status of solution process:
             alphaold, zeta, yty, ytg, t1, t2, t3, t4,
            *Rk, *Re, *Sk, *SkF, *stemp, *Yk, *SkYk,
            *dsub, *gsub, *gsubtemp, *gkeep, *tau, *vsub, *wsub ;
+
+    cg_iter_stats IterStats;
+    IterStats.n = n;
 
     cg_parameter *Parm, ParmStruc ;
     cg_com Com ;
@@ -329,6 +345,11 @@ int cg_descent /*  return status of solution process:
     }
 
     Com.df0 = -2.0*fabs(f)/alpha ;
+
+    if (callback != NULL)
+    {
+        UPDATE_STATS_AND_CALLBACK();
+    }
 
     Restart = FALSE ;    /* do not restart the algorithm */
     IterRestart = 0 ;    /* counts number of iterations since last restart */
@@ -1480,6 +1501,11 @@ int cg_descent /*  return status of solution process:
         {
            status = 5 ;
            goto Exit ;
+        }
+
+        if (callback != NULL)
+        {
+            UPDATE_STATS_AND_CALLBACK();
         }
     }
     status = 2 ;

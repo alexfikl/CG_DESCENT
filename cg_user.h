@@ -28,13 +28,6 @@ extern "C"
 {
 #endif
 
-/*============================================================================
- * function pointer types
- */
-
-typedef double (*cg_value_fn)(double*, INT, void*);
-typedef void (*cg_grad_fn)(double*, double*, INT, void*);
-typedef double (*cg_valgrad_fn)(double*, double*, INT, void*);
 
 /*============================================================================
    cg_parameter is a structure containing parameters used in cg_descent
@@ -213,6 +206,24 @@ typedef struct cg_stats_struct /* statistics returned to user */
     INT              ngrad ; /* number of gradient evaluations */
 } cg_stats ;
 
+typedef struct cg_iter_stats_struct
+{
+    INT               iter ; /* iteration */
+    INT                  n ; /* input size */
+    double           alpha ; /* stepsize at current iteration */
+    double              *x ; /* solution at current iteration */
+    double               f ; /* function value at current iteration */
+    double              *g ; /* gradient at current iteration */
+    double              *d ; /* descent direction at current iteration */
+} cg_iter_stats;
+
+/* function pointer types */
+
+typedef double (*cg_value_fn)(double*, INT, void*);
+typedef void (*cg_grad_fn)(double*, double*, INT, void*);
+typedef double (*cg_valgrad_fn)(double*, double*, INT, void*);
+typedef int (*cg_callback_fn)(cg_iter_stats*, void*);
+
 /* prototypes */
 
 int cg_descent /*  return:
@@ -230,18 +241,20 @@ int cg_descent /*  return:
                        9 (debugger is on and the function value increases)
                       10 (out of memory) */
 (
-    double            *x, /* input: starting guess, output: the solution */
-    INT                n, /* problem dimension */
-    cg_stats      *Stats, /* structure with statistics (see cg_descent.h) */
-    cg_parameter  *UParm, /* user parameters, NULL = use default parameters */
-    double      grad_tol, /* StopRule = 1: |g|_infty <= max (grad_tol,
+    double               *x, /* input: starting guess, output: the solution */
+    INT                   n, /* problem dimension */
+    cg_stats         *Stats, /* structure with statistics (see cg_descent.h) */
+    cg_parameter     *UParm, /* user parameters, NULL = use default parameters */
+    double         grad_tol, /* StopRule = 1: |g|_infty <= max (grad_tol,
                                            StopFac*initial |g|_infty) [default]
-                             StopRule = 0: |g|_infty <= grad_tol(1+|f|) */
-    cg_value_fn value,      /* f = value (x, n, User) */
-    cg_grad_fn grad,        /* grad (g, x, n, User) */
-    cg_valgrad_fn valgrad,  /* f = valgrad (g, x, n, User)*/
-    double         *Work,   /* either size 4n work array or NULL */
-    void           *User    /* user provided pointer passed to functions */
+                                StopRule = 0: |g|_infty <= grad_tol(1+|f|) */
+    cg_value_fn       value, /* f = value (x, n, User) */
+    cg_grad_fn         grad, /* grad (g, x, n, User) */
+    cg_valgrad_fn   valgrad, /* f = valgrad (g, x, n, User) */
+    cg_callback_fn callback, /* user provided function called at the end of
+                                a (successful) iteration */
+    double            *Work, /* either size 4n work array or NULL */
+    void              *User  /* user provided pointer passed to functions */
 ) ;
 
 void cg_default /* set default parameter values */
