@@ -129,6 +129,9 @@ typedef struct cg_parameter_struct /* user controlled parameters */
     /* if step is nonzero, it is the initial step of the initial line search */
     double step ;
 
+    /* if non-zero, it is a maximum allowed step size for all iterations */
+    double max_step ;
+
     /* abort cg after maxit iterations */
     INT maxit ;
 

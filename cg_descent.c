@@ -344,6 +344,7 @@ int cg_descent /*  return status of solution process:
         else    alpha = Parm->psi0*xnorm/gnorm ;
     }
 
+    alpha = MIN(alpha, Parm->max_step);
     Com.df0 = -2.0*fabs(f)/alpha ;
 
     if (callback != NULL)
@@ -371,7 +372,7 @@ int cg_descent /*  return status of solution process:
         /* save old alpha to simplify formula computing subspace direction */
         alphaold = alpha ;
         Com.QuadOK = FALSE ;
-        alpha = Parm->psi2*alpha ;
+        alpha = MIN (Parm->psi2*alpha, Parm->max_step) ;
         if ( f != ZERO ) t = fabs ((f-Com.f0)/f) ;
         else             t = ONE ;
         Com.UseCubic = TRUE ;
@@ -383,7 +384,7 @@ int cg_descent /*  return status of solution process:
             {
                 if ( QuadF )
                 {
-                    Com.alpha = Parm->psi1*alpha ;
+                    Com.alpha = MIN(Parm->psi1*alpha, Parm->max_step) ;
                     status = cg_evaluate ("g", "y", &Com) ;
                     if ( status ) goto Exit ;
                     if ( Com.df > dphi0 )
@@ -413,7 +414,7 @@ int cg_descent /*  return status of solution process:
                 else
                 {
                     t = MAX (Parm->psi_lo, Com.df0/(dphi0*Parm->psi2)) ;
-                    Com.alpha = MIN (t, Parm->psi_hi)*alpha ;
+                    Com.alpha = MIN (MIN (t, Parm->psi_hi)*alpha, Parm->max_step) ;
                     status = cg_evaluate ("f", "y", &Com) ;
                     if ( status ) goto Exit ;
                     ftemp = Com.f ;
@@ -428,6 +429,8 @@ int cg_descent /*  return status of solution process:
                         Com.QuadOK = TRUE ;
                     }
                 }
+
+                alpha = MIN(alpha, Parm->max_step);
                 if ( PrintLevel >= 1 )
                 {
                     if ( denom <= ZERO )
@@ -1836,6 +1839,8 @@ PRIVATE int cg_line
             if ( Com->neps > Parm->neps ) return (6) ;
         }
 
+        if (a > Parm->max_step) goto Line;
+
         /* expansion phase */
         ngrow++ ;
         if ( ngrow > Parm->ntries ) return (3) ;
@@ -1896,6 +1901,14 @@ PRIVATE int cg_line
 
     /* we now have fa <= fpert, da >= 0, db <= 0 */
 Line:
+    if (a > Parm->max_step)
+    {
+        Com->alpha = Parm->max_step ;
+        status = cg_evaluate ("fg", "n", Com) ;
+        if ( status ) return (status) ;
+        return (0) ;
+    }
+
     toggle = 0 ;
     width = b - a ;
     qb0 = FALSE ;
@@ -1989,6 +2002,14 @@ Line:
             alpha = .5*(a+b) ; /* use bisection if b-a decays slowly */
             s1 = "bisection" ;
             Com->QuadOK = FALSE ;
+        }
+
+        if (alpha > Parm->max_step)
+        {
+            Com->alpha = Parm->max_step ;
+            status = cg_evaluate ("fg", "n", Com) ;
+            if ( status ) return (status) ;
+            return (0) ;
         }
 
         if ( (alpha <= a) || (alpha >= b) )
@@ -3920,6 +3941,9 @@ void cg_default
     /* if step is nonzero, it is the initial step of the initial line search */
     Parm->step = ZERO ;
 
+    /* if non-zero, it is a maximum allowed step size for all iterations */
+    Parm->max_step = INF ;
+
     /* abort cg after maxit iterations */
     Parm->maxit = INT_INF ;
 
@@ -4075,6 +4099,8 @@ PRIVATE void cg_printParms
              Parm->psi0) ;
     printf ("starting step in first iteration if nonzero ...... step: %e\n",
              Parm->step) ;
+    printf ("maximum step for all iterations .............. max_step: %e\n",
+             Parm->max_step) ;
     printf ("lower bound factor in quad step ................ psi_lo: %e\n",
              Parm->psi_lo) ;
     printf ("upper bound factor in quad step ................ psi_hi: %e\n",
