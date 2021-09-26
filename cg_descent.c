@@ -2444,8 +2444,8 @@ PRIVATE int cg_evaluate
                     Com->cg_grad (gtemp, xtemp, n, Com->User) ;
                     Com->f = Com->cg_value (xtemp, n, Com->User) ;
                 }
-                Com->df = cg_dot (gtemp, d, n) ;
             }
+            Com->df = cg_dot (gtemp, d, n) ;
             Com->nf++ ;
             Com->ng++ ;
             if ( (Com->df != Com->df) || (Com->f != Com->f) ||
