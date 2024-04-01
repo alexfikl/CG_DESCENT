@@ -1,11 +1,21 @@
-Users interested in applying cg_descent in a parallel setting, please see:
+Notice
+======
 
-http://www5.cs.fau.de/en/our-team/grimm-robert/downloads/
-=======================================================================
-cg_descent is a conjugate gradient algorithm for solving
-an unconstrained minimization problem of the form:
+This repository containts some patches on top of the vanilla CG_DESCENT
+algorithm that are used by [pycgdescent](https://github.com/alexfikl/pycgdescent).
 
-                    min f (x)
+CG_DESCENT
+==========
+
+Users interested in applying `cg_descent` in a parallel setting, please see::
+
+    http://www5.cs.fau.de/en/our-team/grimm-robert/downloads/
+
+`cg_descent` is a conjugate gradient algorithm for solving
+an unconstrained minimization problem of the form
+```
+min f (x)
+```
 
 The algorithm is developed in the following papers
 (see www.math.ufl.edu/~hager/papers/CG):
@@ -33,9 +43,10 @@ to evaluate the objective function and its gradient.  Performance
 is often improved if the user also provides a routine to simultaneously
 evaluate the objective function and its gradient (see drive1.c).
 In the simplest case, cg_descent is invoked with a statement
-of the form:
-
+of the form
+```c
 cg_descent (x, n, NULL, NULL, tol, myvalue, mygrad, NULL, NULL) ;
+```
 
 where x is a pointer to an array which contains the starting
 guess on input and the solution on output, n is the problem
@@ -68,15 +79,16 @@ concerning CUTE is given in the README inside the interface
 directories. Information concerning the CUTEst testing environment is
 available at the following web site:
 
-http://ccpforge.cse.rl.ac.uk/gf/project/cutest/wiki/
+    http://ccpforge.cse.rl.ac.uk/gf/project/cutest/wiki/
 
 cg_descent does loop unrolling, so there is likely no benefit
 from using unrolled BLAS. There could be a benefit from using
 threaded BLAS if the problems is really big.  To use the BLAS
 with cg_descent, comment out the following statement in the
 cg_blas.h file:
-
+```c
 #define NOBLAS
+```
 
 Also, make any needed adjustments to the BLAS_UNDERSCORE and the
 BLAS_START parameters as explained in the cg_blas.h file. In the
@@ -90,7 +102,9 @@ threaded BLAS if the problems is really big.  To use the BLAS
 with cg_descent, comment out the following statement in the
 cg_blas.h file:
 
+```c
 #define NOBLAS
+```
 
 Also, make any needed adjustments to the BLAS_UNDERSCORE and the
 BLAS_START parameters as explained in the cg_blas.h file. In the
